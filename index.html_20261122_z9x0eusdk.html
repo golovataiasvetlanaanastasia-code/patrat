@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Proprietățile Pătratului</title>
+    <style>
+        /* Design minimalist și elegant */
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --success: #27ae60;
+            --error: #c0392b;
+            --border: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            max-width: 720px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .question-block:last-of-type {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-size: 1.05rem;
+        }
+
+        .options label {
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: 6px;
+            background-color: #fcfcfc;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options label:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent);
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #34495e;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .result-box h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .feedback-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .correct-answer {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            border-left: 3px solid var(--success);
+        }
+
+        .wrong-answer {
+            background-color: #ffebee;
+            color: #b71c1c;
+            border-left: 3px solid var(--error);
+        }
+        
+        .score-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Proprietățile Pătratului</h1>
+    <p class="subtitle">Evaluare formativă | Clasa a VIII-a</p>
+
+    <form id="quizForm">
+        <!-- Întrebările vor fi generate dinamic aici -->
+    </form>
+
+    <button type="button" class="btn-submit" onclick="checkAnswers()">Verifică răspunsurile</button>
+
+    <div id="resultBox" class="result-box">
+        <h2>Rezultat</h2>
+        <p id="scoreText" class="score-text"></p>
+        <div id="feedbackList"></div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            q: "1. Care dintre următoarele afirmații definește corect un pătrat?",
+            options: [
+                "Un romb cu toate unghiurile de 90°",
+                "Un paralelogram cu diagonalele perpendiculare",
+                "Un dreptunghi cu doar două laturi egale",
+                "Un trapez cu toate laturile egale"
+            ],
+            correct: 0
+        },
+        {
+            q: "2. Care este măsura fiecărui unghi interior al unui pătrat?",
+            options: ["60°", "90°", "120°", "180°"],
+            correct: 1
+        },
+        {
+            q: "3. Ce proprietate caracteristică au diagonalele unui pătrat?",
+            options: [
+                "Sunt egale, dar nu se înjumătățesc",
+                "Sunt perpendiculare, dar au lungimi diferite",
+                "Sunt egale, perpendiculare și se înjumătățesc",
+                "Sunt paralele și egale"
+            ],
+            correct: 2
+        },
+        {
+            q: "4. În pătratul ABCD, diagonalele se intersectează în O. Ce măsură are unghiul format de o diagonală cu o latură (ex: ∠BAC)?",
+            options: ["30°", "45°", "60°", "90°"],
+            correct: 1
+        },
+        {
+            q: "5. Câte axe de simetrie are un pătrat?",
+            options: ["1", "2", "3", "4"],
+            correct: 3
+        },
+        {
+            q: "6. Care este centrul de simetrie al pătratului?",
+            options: [
+                "Unul dintre vârfuri",
+                "Mijlocul unei laturi",
+                "Punctul de intersecție al diagonalelor",
+                "Pătratul nu are centru de simetrie"
+            ],
+            correct: 2
+        },
+        {
+            q: "7. Dacă perimetrul unui pătrat este de 36 cm, care este lungimea laturii sale?",
+            options: ["6 cm", "9 cm", "12 cm", "18 cm"],
+            correct: 1
+        },
+        {
+            q: "8. Un pătrat este un romb care are în plus proprietatea:",
+            options: [
+                "Toate laturile sunt egale",
+                "Diagonalele sunt perpendiculare",
+                "Toate unghiurile sunt de 90°",
+                "Diagonalele sunt axe de simetrie"
+            ],
+            correct: 2
+        },
+        {
+            q: "9. În pătratul ABCD cu diagonalele AC și BD intersectate în O, ce fel de triunghi este triunghiul AOB?",
+            options: [
+                "Echilateral",
+                "Dreptunghic și isoscel",
+                "Oarecare",
+                "Doar isoscel"
+            ],
+            correct: 1
+        },
+        {
+            q: "10. Care dintre următoarele afirmații despre pătrat este FALSĂ?",
+            options: [
+                "Este un paralelogram",
+                "Diagonalele au lungimi diferite",
+                "Are 4 axe de simetrie",
+                "Laturile opuse sunt paralele"
+            ],
+            correct: 1
+        }
+    ];
+
+    // Generarea dinamică a quiz-ului
+    const form = document.getElementById('quizForm');
+    quizData.forEach((item, index) => {
+        let optionsHtml = '';
+        item.options.forEach((opt, optIndex) => {
+            optionsHtml += `
+                <label>
+                    <input type="radio" name="q${index}" value="${optIndex}" required>
+                    ${opt}
+                </label>
+            `;
+        });
+
+        form.innerHTML += `
+            <div class="question-block">
+                <p class="question-text">${item.q}</p>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    // Verificarea răspunsurilor
+    function checkAnswers() {
+        let score = 0;
+        let feedbackHtml = '';
+
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const userAnswer = selected ? parseInt(selected.value) : -1;
+            const correctAnswer = item.correct;
+            
+            let statusClass = '';
+            let statusText = '';
+
+            if (userAnswer === correctAnswer) {
+                score++;
+                statusClass = 'correct-answer';
+                statusText = `✔ Întrebarea ${index + 1}: Corect!`;
+            } else {
+                statusClass = 'wrong-answer';
+                const correctText = userAnswer === -1 ? "Nerăspuns" : item.options[userAnswer];
+                statusText = `✘ Întrebarea ${index + 1}: Greșit. Ai ales: "${correctText}". Răspuns corect: "${item.options[correctAnswer]}".`;
+            }
+            feedbackHtml += `<div class="feedback-item ${statusClass}">${statusText}</div>`;
+        });
+
+        document.getElementById('scoreText').innerText = `Ai obținut ${score} din ${quizData.length} puncte.`;
+        document.getElementById('feedbackList').innerHTML = feedbackHtml;
+        
+        const resultBox = document.getElementById('resultBox');
+        resultBox.style.display = 'block';
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
